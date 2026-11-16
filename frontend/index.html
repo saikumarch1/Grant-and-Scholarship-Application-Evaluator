@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grant & Scholarship Application Evaluator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><h1>Grant & Scholarship Application Evaluator</h1><p>Autonomous Multi-Agent Decision System</p></div>
+    <nav id="tabs" aria-label="Sections">
+      <button data-tab="evaluate" class="on">Evaluate</button>
+      <button data-tab="board">Applications</button>
+      <button data-tab="consistency">Consistency check</button>
+      <button data-tab="audit">Audit trail</button>
+      <button data-tab="rubric">Rubric and architecture</button>
+    </nav>
+    <div id="health" class="health" role="status">Connecting</div>
+  </header>
+
+  <div id="notice" class="notice" hidden></div>
+
+  <main>
+    <section id="tab-evaluate" class="tab on">
+      <div class="split">
+        <aside class="card form">
+          <h2>Application</h2>
+          <p class="hint">Paste any application: a form, a letter or plain notes. The Intake Agent reads it in whatever wording it arrives.</p>
+          <div style="display: flex; gap: 0.5rem; align-items: flex-end; margin-bottom: 0.6rem;">
+            <div style="flex: 1;">
+              <label for="sample">Load a sample profile</label>
+              <select id="sample" style="width: 100%;"><option value="">Choose a sample application</option></select>
+            </div>
+            <button id="btnBlank" type="button" class="btn-subtle" title="Insert blank template" style="padding: 0.45rem 0.75rem; font-size: 0.82rem; white-space: nowrap; margin-bottom: 2px; cursor: pointer; border: 1px solid #9bb0a5; background: #f4f7f5; border-radius: 4px;">+ Blank Template</button>
+          </div>
+          <label for="appText">Application text (Editable)</label>
+          <textarea id="appText" rows="15" spellcheck="false" placeholder="Enter student application details here..."></textarea>
+          <button id="evaluate" class="primary">Evaluate application</button>
+          <p id="formError" class="error" hidden></p>
+          
+          <details class="field-guide" style="margin-top: 1rem; border-top: 1px solid #d4ded8; padding-top: 0.75rem; font-size: 0.85rem; color: #42524a;">
+            <summary style="cursor: pointer; font-weight: 600; color: #1e3a30;">Categories & Information Guide</summary>
+            <div style="margin-top: 0.5rem; line-height: 1.45;">
+              <p>The Intake Agent extracts these 9 categories from the text:</p>
+              <ul style="padding-left: 1.2rem; margin: 0.4rem 0;">
+                <li><b>Name:</b> Full name of applicant.</li>
+                <li><b>Course:</b> Degree & level (must state <i>undergraduate</i> to pass rule E3).</li>
+                <li><b>Latest result:</b> Examination percentage (must be &ge; 60% for rule E1; &ge;90% earns 100 merit pts).</li>
+                <li><b>Family income:</b> Annual rupees (e.g. <i>Rs 3,50,000</i> or <i>4 lakh</i>; &le; 8,00,000 for rule E2).</li>
+                <li><b>Dependents:</b> Number of family dependents (3-4 earns 70 need pts; 5+ earns 100 pts).</li>
+                <li><b>Other financial aid:</b> Existing aid percentage (0% or <i>none</i> earns 100 need pts).</li>
+                <li><b>Documents:</b> Must include both <i>income certificate</i> and <i>marksheet</i> (rule E4).</li>
+                <li><b>Achievements:</b> Formatted as <i>National: ...</i>, <i>State: ...</i>, or <i>Institute: ...</i></li>
+                <li><b>Statement:</b> 50-250 words covering career goals, quantitative numbers, and community impact.</li>
+              </ul>
+            </div>
+          </details>
+        </aside>
+        <section class="floor-wrap">
+          <div class="floor-head"><h2>Agent floor</h2><span id="runLabel" class="muted">No run yet</span></div>
+          <div id="floorEval" class="floor eval"></div>
+        </section>
+      </div>
+      <div id="result"></div>
+    </section>
+
+    <section id="tab-board" class="tab">
+      <div class="bar"><h2>Applications</h2><button id="refreshBoard">Refresh</button></div>
+      <div id="board"></div>
+    </section>
+
+    <section id="tab-consistency" class="tab">
+      <h2>Consistency check</h2>
+      <p class="hint">The Consistency Agent replays the rubric on two scored applications and confirms the same rule was applied to both.</p>
+      <div class="card row">
+        <div><label for="conA">Application A</label><select id="conA"></select></div>
+        <div><label for="conB">Application B</label><select id="conB"></select></div>
+        <label class="check"><input type="checkbox" id="conInject"> Inject a scoring error into B (audit self test)</label>
+        <button id="runCon" class="primary">Run consistency check</button>
+      </div>
+      <p id="conError" class="error" hidden></p>
+      <div id="floorCon" class="floor single"></div>
+      <div id="conResult"></div>
+    </section>
+
+    <section id="tab-audit" class="tab">
+      <h2>Audit trail</h2>
+      <div class="card row"><div><label for="auditRun">Run</label><select id="auditRun"></select></div><span id="logState" class="muted"></span></div>
+      <div id="trace"></div>
+      <h3>Append only log, latest entries</h3>
+      <div id="logRows"></div>
+    </section>
+
+    <section id="tab-rubric" class="tab">
+      <h2>Architecture</h2>
+      <div class="card"><img src="architecture.svg" alt="ScholarDesk architecture: browser, FastAPI server, coordinator, six LLM agents, rubric and run log" class="arch"></div>
+      <h2>Agent roster</h2><div id="roster"></div>
+      <h2>Published rubric</h2><div id="rubricTable"></div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
