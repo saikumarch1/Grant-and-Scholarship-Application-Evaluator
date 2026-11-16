@@ -1,0 +1,11 @@
+semantic-kernel>=1.20
+openai>=1.50
+fastapi>=0.110
+uvicorn>=0.30
+python-dotenv
+httpx
+pytest
+pytest-asyncio
+nbformat
+nbconvert
+ipykernel
